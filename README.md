@@ -9,14 +9,12 @@ The core comparison is between:
 
 The implementation is provided in a single, user-oriented Jupyter notebook.
 
----
 
 ## Repository Contents
 
 - `user_friendly_notebook.ipynb` — full workflow: data loading, preprocessing, model definitions, hyperparameter search, evaluation, spectral analysis, and sanity checks.
 - `README.md` — project overview and usage notes.
 
----
 
 ## What the Notebook Does
 
@@ -41,10 +39,8 @@ The notebook is organized into the following sections:
 9. **Spectral analysis**
    - Frequency-domain analysis of learned activations/projections.
 10. **Sanity checks**
-   - Leakage checks and additional validation diagnostics.
-
----
-
+    - Leakage checks and additional validation diagnostics.
+      
 ## Data Requirements
 
 The notebook expects BCI IVa subject files named like:
@@ -54,8 +50,6 @@ The notebook expects BCI IVa subject files named like:
 - `data_set_IVa_aw.mat`
 
 In the current notebook code, files are referenced using a `/content/...` style path (Colab-style layout). If you run locally, update those paths to your local dataset location.
-
----
 
 ## Environment and Dependencies
 
@@ -68,9 +62,6 @@ The notebook installs packages inline, including (at minimum):
 - `numpy`
 
 It also clones the TIMBRE repository in-notebook. For reproducibility, consider pinning package versions and using a dedicated virtual environment.
-
----
-
 ## How to Run
 
 1. Open `user_friendly_notebook.ipynb` in Jupyter or Google Colab.
@@ -79,23 +70,8 @@ It also clones the TIMBRE repository in-notebook. For reproducibility, consider 
 4. Inspect outputs from:
    - model-comparison section (accuracy trends),
 sdd   - spectral analysis plots.
-
----
-
 ## Notes
 
 - This repo is notebook-centric (not yet packaged as a Python module).
 - Some sections are computationally heavy (especially Optuna loops).
 - Results are subject-dependent and rely on fold-wise evaluation strategy defined in the notebook.
-
----
-
-## Suggested Next Improvements
-
-- Extract reusable functions into `src/` Python modules.
-- Add a `requirements.txt` / `environment.yml` for deterministic setup.
-- Add a small configuration block for dataset paths and subject selection.
-- Save key outputs (metrics/tables/figures) to versioned artifacts.
-- Add CI checks for notebook execution (or a lightweight smoke test script).
-
-
