@@ -1,101 +1,101 @@
-# Complex-Valued EEG Decoding (CSP vs TIMBRE)
+# Complex-Valued Models for EEG Motor Imagery (BCI Competition IVa)
 
-![Python](https://img.shields.io/badge/python-3.10+-blue)
-![Status](https://img.shields.io/badge/status-research-green)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
+This repository contains an end-to-end notebook pipeline for benchmarking **real-valued** and **complex-valued** decoding methods on EEG motor-imagery data from **BCI Competition III, Dataset IVa**.
 
----
+The core comparison is between:
+- **rCSP** (real-valued Common Spatial Patterns) + logistic regression,
+- **cCSP** (complex-valued CSP on analytic signals) + logistic regression,
+- **TIMBRE** (a complex-valued neural model), including tuned and untuned variants.
 
-## TL;DR
-
-- Use **complex-valued signals (Hilbert transform)** for EEG decoding  
-- **cCSP consistently beats rCSP**  
-- **TIMBRE ≈ cCSP**, with subject-specific gains  
-- Models exploit **mu (8–13 Hz)** and **beta (13–30 Hz)** rhythms  
+The implementation is provided in a single, user-oriented Jupyter notebook.
 
 ---
 
-## Models
+## Repository Contents
 
-| Model   | Type            | Projection        |
-|--------|-----------------|------------------|
-| rCSP   | Real-valued     | Closed-form      |
-| cCSP   | Complex-valued  | Closed-form      |
-| TIMBRE | Complex-valued  | Learned (NN)     |
+- `user_friendly_notebook.ipynb` — full workflow: data loading, preprocessing, model definitions, hyperparameter search, evaluation, spectral analysis, and sanity checks.
+- `README.md` — project overview and usage notes.
 
 ---
 
-## Data
+## What the Notebook Does
 
-- BCI Competition III — Dataset IVa  
-- 118-channel EEG  
-- Binary task: **hand vs foot imagery**  
-- 100 Hz, 3.5s trials  
+The notebook is organized into the following sections:
+
+1. **Imports and setup**
+   - Installs dependencies and prepares the environment.
+2. **Data loading**
+   - Loads subject-level IVa `.mat` files and builds trial metadata.
+3. **Preprocessing**
+   - Filtering, Hilbert transform / analytic-signal construction, whitening, and fold-safe train/test handling.
+4. **Model definitions**
+   - Implements TIMBRE variants and CSP-based pipelines.
+5. **Analysis utilities**
+   - Helper functions for visualization and diagnostics.
+6. **Hyperparameter search (TIMBRE)**
+   - Optuna-based tuning loop.
+7. **Hyperparameter search (CSP)**
+   - Optuna-based tuning for cCSP/rCSP-related settings.
+8. **Model comparison**
+   - Sweeps model configurations and compares accuracies.
+9. **Spectral analysis**
+   - Frequency-domain analysis of learned activations/projections.
+10. **Sanity checks**
+   - Leakage checks and additional validation diagnostics.
 
 ---
 
-## Pipeline
+## Data Requirements
 
-```text
-EEG → Filter → Hilbert → Whitening → Projection → Magnitude → Classifier
-```
+The notebook expects BCI IVa subject files named like:
 
-* 5-fold CV (per subject)
-* Logistic regression / softmax output
+- `data_set_IVa_aa.mat`
+- `data_set_IVa_al.mat`
+- `data_set_IVa_aw.mat`
 
----
-
-## Spectral Insight
-
-* Analyze **FFT of model activations**
-* Compare class-wise power
-* Reveals what frequencies drive decoding (not just accuracy)
+In the current notebook code, files are referenced using a `/content/...` style path (Colab-style layout). If you run locally, update those paths to your local dataset location.
 
 ---
 
-## Run
+## Environment and Dependencies
 
-```bash
-pip install -r requirements.txt
-python main.py
-```
+The notebook installs packages inline, including (at minimum):
+- `mne`
+- `optuna`
+- `tensorflow`
+- `scikit-learn`
+- `scipy`
+- `numpy`
 
-*or run the notebook directly*
+It also clones the TIMBRE repository in-notebook. For reproducibility, consider pinning package versions and using a dedicated virtual environment.
+
+---
+
+## How to Run
+
+1. Open `user_friendly_notebook.ipynb` in Jupyter or Google Colab.
+2. Update dataset paths to where IVa files live on your machine/runtime.
+3. Run cells in order from top to bottom.
+4. Inspect outputs from:
+   - model-comparison section (accuracy trends),
+sdd   - spectral analysis plots.
 
 ---
 
 ## Notes
 
-* Hyperparameter search via **Optuna (nested CV)**
-* **cCSP is near-optimal analytically**
-* **TIMBRE gains are data-dependent**
+- This repo is notebook-centric (not yet packaged as a Python module).
+- Some sections are computationally heavy (especially Optuna loops).
+- Results are subject-dependent and rely on fold-wise evaluation strategy defined in the notebook.
 
 ---
 
-## Repo
+## Suggested Next Improvements
 
-[https://github.com/gassyguillermomendoza/complex-valued-models-on-BCI-thesis](https://github.com/gassyguillermomendoza/complex-valued-models-on-BCI-thesis)
+- Extract reusable functions into `src/` Python modules.
+- Add a `requirements.txt` / `environment.yml` for deterministic setup.
+- Add a small configuration block for dataset paths and subject selection.
+- Save key outputs (metrics/tables/figures) to versioned artifacts.
+- Add CI checks for notebook execution (or a lightweight smoke test script).
 
----
-
-## Citation
-
-```bibtex
-@thesis{mendoza2026complex,
-  title={Complex-Valued Models Improve EEG Behavior Decoding},
-  author={Mendoza Franco, Guillermo A.},
-  year={2026},
-  school={Claremont Colleges}
-}
-```
-
-```
-
-If you want one step further (more “viral repo” style), I can add:
-- a **one-line hook**
-- example figures (your spectra plots)
-- or a **demo GIF-style workflow**
-
-But this is already in that sweet spot: clean + technical + readable.
-```
 
